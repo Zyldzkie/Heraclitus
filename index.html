@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 
     <style>
         .custom-btn {
@@ -20,63 +20,128 @@
             transition: all 0.3s ease;
             border-radius: 10px;
         }
+
         .custom-btn:hover {
             color: white;
-            background-color: brown; 
+            background-color: brown;
             border-radius: 8px;
         }
+
         body {
-            background-image: url("assets/bg-birds.png"); 
+            background-image: url("assets/bg-birds.png");
             background-size: 1000px;
-            background-attachment: fixed; 
-            background-position: left top; 
+            background-attachment: fixed;
+            background-position: left top;
             background-repeat: no-repeat;
         }
-    </style>
 
+        .loading-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutToRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(150%);
+                opacity: 0; 
+            }
+        }
+
+        .loading-modal img {
+            animation: slideInFromLeft 3s ease-out forwards,
+                    slideOutToRight 2s ease-in 3s forwards; 
+        }
+
+
+
+
+    </style>
 </head>
+
 <body>
 
-  
     <div class="container-lg min-vh-100 p-0 d-flex align-items-center">
         <div class="row w-100">
 
             <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center mb-5">
                 <img class="img-fluid" width="800" height="400" src="assets/title.gif" alt="">
-                
-                <a href="chatroom.html" class="custom-btn">Learn more</a>
-
+                <a href="javascript:void(0);" class="custom-btn" id="learnMoreBtn">Learn more</a>
             </div>
 
             <div class="col-lg-4 d-flex justify-content-center align-items-center">
-                <img class="" src="assets/hera-splash.png" style="border-radius: 10px;filter: drop-shadow(4px 8px 4px rgb(54, 52, 52));
- ">
+                <img class="" src="assets/hera-splash.png" style="border-radius: 10px; filter: drop-shadow(4px 8px 4px rgb(54, 52, 52));">
             </div>
 
         </div>
     </div>
 
+    <div class="loading-modal" id="loadingModal">
+        <img style="margin-right: -60px;" src="assets/loading_bird.gif" alt="">
+        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <script type="module">
-        import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-      
-        const widget = await Chatbox.initBubble({
-          agentId: 'cm04z5yqx00g0vce69gzj7ckp',
-          
-          // Override initial messages
-          initialMessages: [
-            'Hello, what are things do you want to know about Heraclitus?',
-            'How can I help you ?',
-          ],
-   
-          context: "You are the apprentice and scribe of Heraclitus. You are expected to respect Heraclitus.",
+    
+        document.getElementById('learnMoreBtn').addEventListener('click', function () {
+            const loadingModal = document.getElementById('loadingModal');
+            const spinner = loadingModal.querySelector('.spinner-border');
+            loadingModal.style.display = 'flex';
+            spinner.style.display = 'block';
+
+            setTimeout(function () {
+                spinner.style.display = 'none';
+            }, 3000);
+
+            setTimeout(function () {
+                window.location.href = 'chatroom.html';
+            }, 5500);
         });
-      
+
+        import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+        const widget = await Chatbox.initBubble({
+            agentId: 'cm04z5yqx00g0vce69gzj7ckp',
+
+            initialMessages: [
+                'Hello, what are things do you want to know about Heraclitus?',
+                'How can I help you ?',
+            ],
+
+            context: "You are the apprentice and scribe of Heraclitus. You are expected to respect Heraclitus.",
+        });
+
         widget.open();
-      
+
         widget.close()
 
         widget.toggle()
     </script>
 
 </body>
+
 </html>
